@@ -1,9 +1,12 @@
-import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -15,10 +18,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 
 public class Gui {
 
@@ -39,32 +41,35 @@ public class Gui {
 	/* Labels */
 	private JLabel percentLabel = new JLabel("%");
 	private JLabel selectPercentLabel = new JLabel(
-			"<html>Please select at what percent level you<br>you want script to eat.</html>");
+			"<html>Please select at what<br>percent level you<br>you want script to eat.</html>");
 	private JLabel lootLabel = new JLabel(
-			"Please select what you want script to loot.");
+			"<html>Please select what<br>you want script to loot.</html>");
 
 	/* Spinner */
-	private SpinnerNumberModel numModel = new SpinnerNumberModel(1.0, 0.0,
+	private SpinnerNumberModel numModel = new SpinnerNumberModel(1.0, 1.0,
 			99.0, 1.0);
 	private JSpinner spinner = new JSpinner(numModel);
 
 	/* Combo boxes */
-	private JComboBox<?> lootComboBox = new JComboBox<>();
+	private JComboBox<Loot> lootComboBox = new JComboBox<Loot>(Loot.values());
 	private JCheckBox foodCheckBox = new JCheckBox("Eat food");
 	private JCheckBox lootCheckBox = new JCheckBox("Loot");
 
 	/* Panels */
 	private JPanel panel = new JPanel();
-	private JPanel panel_1 = new JPanel();
-	private JPanel panel_2 = new JPanel();
+	private JPanel panel1 = new JPanel();
+	private JPanel panel2 = new JPanel();
 
 	/* Button */
 	private JButton startButton = new JButton("Start");
 
-	/* Layouts */
-	GroupLayout gl_panel = new GroupLayout(panel);
-	GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-	GroupLayout gl_panel_2 = new GroupLayout(panel_2);
+	/* Border */
+	private final Border lowered = BorderFactory
+			.createEtchedBorder(EtchedBorder.LOWERED);
+	private final Border titledBorder = BorderFactory.createTitledBorder(
+			lowered, "Food");
+	private final Border lootBorder = BorderFactory.createTitledBorder(lowered,
+			"Loot");
 
 	public Gui() {
 		initialize();
@@ -73,137 +78,57 @@ public class Gui {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("QCow Killer");
-		frame.setBounds(100, 100, 306, 292);
+		frame.setLocation(100, 100);
+		frame.setSize(306, 260);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setResizable(false);
 
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		frame.add(panel);
 
-		panel_1.setBorder(new TitledBorder(new EtchedBorder(
-				EtchedBorder.LOWERED, null, null), "Food",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		panel_2.setBorder(new TitledBorder(new EtchedBorder(
-				EtchedBorder.LOWERED, null, null), "Loot",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(foodCheckBox);
+		panel.add(lootCheckBox);
+		panel.add(panel1);
+		panel.add(panel2);
+		panel.add(startButton);
 
-		gl_panel.setHorizontalGroup(gl_panel
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						Alignment.TRAILING,
-						gl_panel.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(
-										gl_panel.createParallelGroup(
-												Alignment.TRAILING)
-												.addComponent(
-														panel_1,
-														Alignment.LEADING,
-														GroupLayout.DEFAULT_SIZE,
-														280, Short.MAX_VALUE)
-												.addComponent(lootCheckBox,
-														Alignment.LEADING)
-												.addComponent(foodCheckBox,
-														Alignment.LEADING)
-												.addComponent(
-														panel_2,
-														Alignment.LEADING,
-														GroupLayout.DEFAULT_SIZE,
-														280, Short.MAX_VALUE)
-												.addComponent(
-														startButton,
-														Alignment.LEADING,
-														GroupLayout.DEFAULT_SIZE,
-														280, Short.MAX_VALUE))
-								.addContainerGap()));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				gl_panel.createSequentialGroup()
-						.addContainerGap(GroupLayout.DEFAULT_SIZE,
-								Short.MAX_VALUE)
-						.addComponent(foodCheckBox)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(lootCheckBox)
-						.addGap(4)
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 74,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 74,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(startButton).addGap(57)));
+		/* Titled border */
+		panel1.setMaximumSize(new Dimension(500, 70));
+		panel1.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel1.setBorder(titledBorder);
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.LINE_AXIS));
 
-		gl_panel_2.setHorizontalGroup(gl_panel_2
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						Alignment.TRAILING,
-						gl_panel_2
-								.createSequentialGroup()
-								.addContainerGap(115, Short.MAX_VALUE)
-								.addComponent(lootComboBox,
-										GroupLayout.PREFERRED_SIZE, 133,
-										GroupLayout.PREFERRED_SIZE)
-								.addContainerGap())
-				.addGroup(
-						gl_panel_2.createSequentialGroup().addContainerGap()
-								.addComponent(lootLabel)
-								.addContainerGap(202, Short.MAX_VALUE)));
-		gl_panel_2.setVerticalGroup(gl_panel_2.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_panel_2
-						.createSequentialGroup()
-						.addComponent(lootLabel)
-						.addGap(8)
-						.addComponent(lootComboBox, GroupLayout.PREFERRED_SIZE,
-								25, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(42, Short.MAX_VALUE)));
-		panel_2.setLayout(gl_panel_2);
+		panel2.setMaximumSize(new Dimension(500, 70));
+		panel2.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel2.setBorder(lootBorder);
+		panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		gl_panel_1.setHorizontalGroup(gl_panel_1.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				Alignment.TRAILING,
-				gl_panel_1
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(selectPercentLabel)
-						.addPreferredGap(ComponentPlacement.RELATED, 120,
-								Short.MAX_VALUE)
-						.addComponent(spinner, GroupLayout.PREFERRED_SIZE, 77,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(percentLabel)));
-		gl_panel_1
-				.setVerticalGroup(gl_panel_1
-						.createParallelGroup(Alignment.TRAILING)
-						.addGroup(
-								gl_panel_1
-										.createSequentialGroup()
-										.addGroup(
-												gl_panel_1
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																gl_panel_1
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addGroup(
-																				gl_panel_1
-																						.createParallelGroup(
-																								Alignment.BASELINE)
-																						.addComponent(
-																								spinner,
-																								GroupLayout.PREFERRED_SIZE,
-																								22,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								percentLabel)))
-														.addComponent(
-																selectPercentLabel))
-										.addContainerGap(56, Short.MAX_VALUE)));
+		/* Button */
+		startButton.setMaximumSize(new Dimension(500, 25));
 
-		panel_1.setLayout(gl_panel_1);
-		panel.setLayout(gl_panel);
+		/* food panel */
+		panel1.add(Box.createHorizontalGlue());
+		panel1.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel1.add(selectPercentLabel);
+		panel1.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel1.add(spinner);
+		panel1.add(Box.createRigidArea(new Dimension(2, 0)));
+		panel1.add(percentLabel);
+
+		// Spinner
+		spinner.setAlignmentX(Component.LEFT_ALIGNMENT);
+		spinner.setMaximumSize(new Dimension(200, 20));
+
+		/* loot panel */
+		panel2.add(Box.createHorizontalGlue());
+		panel2.add(lootLabel);
+		panel2.add(Box.createRigidArea(new Dimension(50, 0)));
+		panel2.add(lootComboBox);
+
+		// loot combobox
+		lootComboBox.setPreferredSize(new Dimension(100, 25));
 
 		/* Menu */
 		frame.setJMenuBar(menuBar);
@@ -320,10 +245,11 @@ public class Gui {
 				if (lootCheckBox.isSelected()) {
 					System.out.println(lootComboBox.getSelectedItem()
 							.toString());
+					// add nodes to loot
 				}
 
 				if (foodCheckBox.isSelected()) {
-
+					// add nodes to eat
 				}
 			}
 
